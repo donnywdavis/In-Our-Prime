@@ -5,8 +5,8 @@
 A prime number is a number that can be evenly divided by 1 and itself. Primes are useful for all sorts of things, but how do we check if a number is prime?
 
 ### Storyboard Tasks
-* [ ] create an intuitive layout for a textfield, a button and a label.
-* [ ] create an intuitive way to select which of the PrimeBrain functions you want the button to perform.
+* [x] create an intuitive layout for a textfield, a button and a label.
+* [x] create an intuitive way to select which of the PrimeBrain functions you want the button to perform.
 
 ### Code Challenge
 * [ ] Create a class called PrimeBrain
