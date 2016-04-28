@@ -18,9 +18,13 @@
 @property (weak, nonatomic) IBOutlet UIPickerView *calculationPicker;
 
 @property (strong, nonatomic) NSArray *calculationOptionsArray;
-@property (strong, nonatomic) NSArray *calculationMethodsArray;
 
 @property (strong, nonatomic) PrimeBrain *brain;
+
+- (NSString *)formatStringFromArray:(NSArray *)numbersArray;
+- (void)checkPrimeAction:(NSString *)numbersString;
+- (void)primeFactorsAction:(NSString *)numbersString;
+- (void)largestCommonPrimeAction:(NSString *)numbersString;
 
 @end
 
@@ -36,7 +40,7 @@
     self.brain = [[PrimeBrain alloc] init];
     
     // Set our available calculation options for the picker
-    self.calculationOptionsArray = @[@"", @"Check Prime Number", @"Get all prime factors", @"Get largest common prime factor"];
+    self.calculationOptionsArray = @[@"", @"Check if prime number", @"Get all prime factors", @"Get largest common prime factor"];
     
     // Disable the check button until a calculation option is selected
     self.checkAnswerButton.enabled = NO;
@@ -56,17 +60,78 @@
 - (IBAction)checkAnswer:(UIButton *)sender {
     switch ([self.calculationPicker selectedRowInComponent:0]) {
         case 1:
-            if ([self.brain isPrimeNumber:(NSUInteger)[self.numbersTextField.text integerValue]]) {
-                self.answerLabel.text = [NSString stringWithFormat:@"%@ is a prime number.", self.numbersTextField.text];
-            } else {
-                self.answerLabel.text = [NSString stringWithFormat:@"%@ is not a prime number.", self.numbersTextField.text];
-            }
+            [self checkPrimeAction:self.numbersTextField.text];
+            break;
+            
+        case 2:
+            [self primeFactorsAction:self.numbersTextField.text];
+            break;
+            
+        case 3:
+            [self largestCommonPrimeAction:self.numbersTextField.text];
             break;
             
         default:
             break;
     }
     [self.numbersTextField resignFirstResponder];
+}
+
+#pragma mark - Calculation Methods
+
+// Check if the number entered is a prime number or not and output the answer
+- (void)checkPrimeAction:(NSString *)numbersString {
+    if ([self.brain isPrimeNumber:[numbersString integerValue]]) {
+        self.answerLabel.text = [NSString stringWithFormat:@"%@ is a prime number.", numbersString];
+    } else {
+        self.answerLabel.text = [NSString stringWithFormat:@"%@ is not a prime number.", numbersString];
+    }
+}
+
+// Get all of the prime factors for a given number and output the results
+- (void)primeFactorsAction:(NSString *)numbersString {
+    NSArray *primeFactors = [[NSArray alloc] init];
+    primeFactors = [self.brain getPrimeFactorsForNumber:[numbersString integerValue]];
+    if (primeFactors) {
+        self.answerLabel.text = [self formatStringFromArray:primeFactors];
+    } else {
+        self.answerLabel.text = [NSString stringWithFormat:@"There are no prime factors for %@.", numbersString];
+    }
+}
+
+// Get the largest common prime factor between two numbers
+- (void)largestCommonPrimeAction:(NSString *)numbersString {
+    NSArray *numbers = [[NSArray alloc] initWithArray:[numbersString componentsSeparatedByString:@" "]];
+    NSUInteger firstNumber = [numbers[0] integerValue];
+    NSUInteger secondNumber = [numbers[1] integerValue];
+    NSInteger largestCommonPrimeFactor = [self.brain getLargestPrimeFactorBetweenNumber:firstNumber andAnotherNumber:secondNumber];
+    
+    self.answerLabel.text = [NSString stringWithFormat:@"The largest common factor between %lu and %lu is %ld.", (unsigned long)firstNumber, (unsigned long)secondNumber, (long)largestCommonPrimeFactor];
+}
+
+// Format a given array to output as a sentence with formatting for the possible answers
+- (NSString *)formatStringFromArray:(NSArray *)numbersArray {
+    NSString *answerString = @"";
+    
+    if (numbersArray.count > 1) {
+        answerString = [NSString stringWithFormat:@"The prime factors for %@ are ", self.numbersTextField.text];
+    } else {
+        answerString = [NSString stringWithFormat:@"The prime factor for %@ is ", self.numbersTextField.text];
+    }
+    
+    for (NSString *primeFactor in numbersArray) {
+        if ((numbersArray.count == 2) && (primeFactor == [numbersArray firstObject])) {
+            answerString = [answerString stringByAppendingString:[NSString stringWithFormat:@"%@ ", primeFactor]];
+        } else if (primeFactor == [numbersArray lastObject]) {
+            answerString = [answerString stringByAppendingString:[NSString stringWithFormat:@"and %@", primeFactor]];
+        } else {
+            answerString = [answerString stringByAppendingString:[NSString stringWithFormat:@"%@, ", primeFactor]];
+        }
+    }
+    
+    answerString = [answerString stringByAppendingString:@"."];
+    
+    return answerString;
 }
 
 #pragma mark - UIPickerViewDelegate
@@ -113,6 +178,7 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     self.numbersTextField.text = @"";
     self.checkAnswerButton.enabled = YES;
+    self.answerLabel.text = @"";
 }
 
 @end
