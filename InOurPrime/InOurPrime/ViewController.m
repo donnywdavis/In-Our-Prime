@@ -18,6 +18,9 @@
 @property (weak, nonatomic) IBOutlet UIPickerView *calculationPicker;
 
 @property (strong, nonatomic) NSArray *calculationOptionsArray;
+@property (strong, nonatomic) NSArray *calculationMethodsArray;
+
+@property (strong, nonatomic) PrimeBrain *brain;
 
 @end
 
@@ -29,13 +32,18 @@
     // Set the delegate and the data source for the picker
     self.calculationPicker.delegate = self;
     self.calculationPicker.dataSource = self;
+    
+    self.brain = [[PrimeBrain alloc] init];
+    
     // Set our available calculation options for the picker
     self.calculationOptionsArray = @[@"", @"Check Prime Number", @"Get all prime factors", @"Get largest common prime factor"];
+    
     // Disable the check button until a calculation option is selected
     self.checkAnswerButton.enabled = NO;
     self.instructionsLabel.text = @"";
     self.answerLabel.text = @"";
     
+    self.numbersTextField.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -46,6 +54,19 @@
 #pragma mark - Button Actions
 
 - (IBAction)checkAnswer:(UIButton *)sender {
+    switch ([self.calculationPicker selectedRowInComponent:0]) {
+        case 1:
+            if ([self.brain isPrimeNumber:(NSUInteger)[self.numbersTextField.text integerValue]]) {
+                self.answerLabel.text = [NSString stringWithFormat:@"%@ is a prime number.", self.numbersTextField.text];
+            } else {
+                self.answerLabel.text = [NSString stringWithFormat:@"%@ is not a prime number.", self.numbersTextField.text];
+            }
+            break;
+            
+        default:
+            break;
+    }
+    [self.numbersTextField resignFirstResponder];
 }
 
 #pragma mark - UIPickerViewDelegate
@@ -85,6 +106,13 @@
 // returns the # of rows in each component..
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
     return self.calculationOptionsArray.count;
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    self.numbersTextField.text = @"";
+    self.checkAnswerButton.enabled = YES;
 }
 
 @end

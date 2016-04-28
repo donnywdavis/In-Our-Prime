@@ -11,7 +11,16 @@
 @implementation PrimeBrain
 
 - (BOOL)isPrimeNumber:(NSUInteger)number {
-    return (number % 1 == 0) && (number % 2 == 0);
+    int counter = 2;
+    
+    while (counter <= (int)number) {
+        if ((number % counter == 0) && (number / counter > 1)) {
+            return NO;
+        }
+        counter += 1;
+    }
+    
+    return YES;
 }
 
 - (NSArray *)getPrimeFactorsForNumber:(NSUInteger)number {
