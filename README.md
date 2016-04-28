@@ -10,6 +10,6 @@ A prime number is a number that can be evenly divided by 1 and itself. Primes ar
 
 ### Code Challenge
 * [x] Create a class called PrimeBrain
-* [ ] Create a method in PrimeBrain that takes an NSUInteger and returns YES if prime, and NO if not prime.
-* [ ] Create a method in PrimeBrain that takes an NSUInteger and returns an array containing all of the prime factors of that number.
-* [ ] Create a method in PrimeBrain that takes 2 NSArrays and finds the largest common number contained in them.
+* [x] Create a method in PrimeBrain that takes an NSUInteger and returns YES if prime, and NO if not prime.
+* [x] Create a method in PrimeBrain that takes an NSUInteger and returns an array containing all of the prime factors of that number.
+* [x] Create a method in PrimeBrain that takes 2 NSArrays and finds the largest common number contained in them.
