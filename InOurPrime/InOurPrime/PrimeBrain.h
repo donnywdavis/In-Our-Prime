@@ -12,6 +12,6 @@
 
 - (BOOL)isPrimeNumber:(NSUInteger)number;
 - (NSArray *)getPrimeFactorsForNumber:(NSUInteger)number;
-- (NSNumber *)getLargestPrimeFactorBetweenArray:(NSUInteger)firstNumber andAnotherArray:(NSUInteger)secondNumber;
+- (NSInteger)getLargestPrimeFactorBetweenNumber:(NSUInteger)firstNumber andAnotherNumber:(NSUInteger)secondNumber;
 
 @end

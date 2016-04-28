@@ -24,11 +24,37 @@
 }
 
 - (NSArray *)getPrimeFactorsForNumber:(NSUInteger)number {
-    return @[];
+    int counter = 2;
+    NSMutableArray *primeFactors = nil;
+    
+    while (counter <= (int)number) {
+        if ((number % counter == 0) && [self isPrimeNumber:counter]) {
+            if (!primeFactors) {
+                primeFactors = [[NSMutableArray alloc] init];
+            }
+            [primeFactors addObject:[NSString stringWithFormat:@"%d", counter]];
+        }
+        counter += 1;
+    }
+    return primeFactors;
 }
 
-- (NSNumber *)getLargestPrimeFactorBetweenArray:(NSUInteger)firstNumber andAnotherArray:(NSUInteger)secondNumber {
-    return @0;
+- (NSInteger)getLargestPrimeFactorBetweenNumber:(NSUInteger)firstNumber andAnotherNumber:(NSUInteger)secondNumber {
+    NSArray *firstNumberArray = [[NSArray alloc] initWithArray:[self getPrimeFactorsForNumber:firstNumber]];
+    NSArray *secondNumberArray = [[NSArray alloc] initWithArray:[self getPrimeFactorsForNumber:secondNumber]];
+    NSInteger largestCommonFactor = 0;
+    
+    if (firstNumberArray && secondNumberArray) {
+        for (NSString *first in firstNumberArray) {
+            for (NSString *second in secondNumberArray) {
+                if (([first integerValue] == [second integerValue]) && ([first integerValue] > largestCommonFactor)) {
+                    largestCommonFactor = [first integerValue];
+                }
+            }
+        }
+    }
+    
+    return largestCommonFactor;
 }
 
 @end
