@@ -25,6 +25,7 @@
 - (void)checkPrimeAction:(NSString *)numbersString;
 - (void)primeFactorsAction:(NSString *)numbersString;
 - (void)largestCommonPrimeAction:(NSString *)numbersString;
+- (void)displayErrorForTitle:(NSString *)title message:(NSString *)message;
 
 @end
 
@@ -40,7 +41,7 @@
     self.brain = [[PrimeBrain alloc] init];
     
     // Set our available calculation options for the picker
-    self.calculationOptionsArray = @[@"", @"Check if prime number", @"Get all prime factors", @"Get largest common prime factor"];
+    self.calculationOptionsArray = @[@"", @"Check if prime number", @"All prime factors", @"Largest common prime factor"];
     
     // Disable the check button until a calculation option is selected
     self.checkAnswerButton.enabled = NO;
@@ -53,6 +54,13 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)displayErrorForTitle:(NSString *)title message:(NSString *)message {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okBUtton = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:okBUtton];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - Button Actions
@@ -68,7 +76,11 @@
             break;
             
         case 3:
-            [self largestCommonPrimeAction:self.numbersTextField.text];
+            if ([self.numbersTextField.text componentsSeparatedByString:@" "].count >= 2) {
+                [self largestCommonPrimeAction:self.numbersTextField.text];
+            } else {
+                [self displayErrorForTitle:@"Error" message:@"You must enter two numbers separated by a space"];
+            }
             break;
             
         default:
@@ -120,7 +132,9 @@
     }
     
     for (NSString *primeFactor in numbersArray) {
-        if ((numbersArray.count == 2) && (primeFactor == [numbersArray firstObject])) {
+        if (numbersArray.count == 1) {
+            answerString = [answerString stringByAppendingString:[NSString stringWithFormat:@"%@", primeFactor]];
+        } else if ((numbersArray.count == 2) && (primeFactor == [numbersArray firstObject])) {
             answerString = [answerString stringByAppendingString:[NSString stringWithFormat:@"%@ ", primeFactor]];
         } else if (primeFactor == [numbersArray lastObject]) {
             answerString = [answerString stringByAppendingString:[NSString stringWithFormat:@"and %@", primeFactor]];
@@ -151,7 +165,7 @@
             break;
             
         case 3:
-            self.instructionsLabel.text = @"Enter two numbers separated by a comma to see the largest common prime number between them.";
+            self.instructionsLabel.text = @"Enter two numbers separated by a space to see the largest common prime factor between them.";
             break;
             
         default:
