@@ -12,8 +12,9 @@
 
 - (BOOL)isPrimeNumber:(NSUInteger)number {
     int counter = 2;
+    int range = sqrt((int)number);
     
-    while (counter <= (int)number) {
+    while (counter <= range) {
         if ((number % counter == 0) && (number / counter > 1)) {
             return NO;
         }
@@ -25,9 +26,10 @@
 
 - (NSArray *)getPrimeFactorsForNumber:(NSUInteger)number {
     int counter = 2;
+    int range = sqrt((int)number);
     NSMutableArray *primeFactors = nil;
     
-    while (counter <= (int)number) {
+    while (counter <= range) {
         if ((number % counter == 0) && [self isPrimeNumber:counter]) {
             if (!primeFactors) {
                 primeFactors = [[NSMutableArray alloc] init];

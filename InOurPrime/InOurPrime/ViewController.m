@@ -118,7 +118,11 @@
     NSUInteger secondNumber = [numbers[1] integerValue];
     NSInteger largestCommonPrimeFactor = [self.brain getLargestPrimeFactorBetweenNumber:firstNumber andAnotherNumber:secondNumber];
     
-    self.answerLabel.text = [NSString stringWithFormat:@"The largest common factor between %lu and %lu is %ld.", (unsigned long)firstNumber, (unsigned long)secondNumber, (long)largestCommonPrimeFactor];
+    if (largestCommonPrimeFactor > 0) {
+        self.answerLabel.text = [NSString stringWithFormat:@"The largest common prime factor between %lu and %lu is %ld.", (unsigned long)firstNumber, (unsigned long)secondNumber, (long)largestCommonPrimeFactor];
+    } else {
+        self.answerLabel.text = [NSString stringWithFormat:@"There are no common prime factors between %lu and %lu.", (unsigned long)firstNumber, (unsigned long)secondNumber];
+    }
 }
 
 // Format a given array to output as a sentence with formatting for the possible answers
